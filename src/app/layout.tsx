@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,14 +12,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Carries the HUD/instrument-panel voice (labels, telemetry, chat console).
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Manuel Jiménez — AI Engineer",
   description:
-    "AI Engineer y Senior Backend Developer especializado en workflows agénticos (LangGraph, CrewAI), RAG y automatización con APIs de Meta. Pregúntale a su asistente de IA sobre su trayectoria.",
+    "AI Engineer y Senior Backend Developer especializado en workflows agénticos (LangGraph, CrewAI), RAG y automatización con APIs de Meta. Pregúntale a Bongo, su asistente, sobre su trayectoria.",
   openGraph: {
     title: "Manuel Jiménez — AI Engineer",
     description:
-      "Workflows agénticos, RAG y backends de alta concurrencia. Chatea con su asistente de IA para conocer su trayectoria.",
+      "Workflows agénticos, RAG y backends de alta concurrencia. Conversa con Bongo para conocer su trayectoria.",
     type: "website",
   },
 };
@@ -28,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

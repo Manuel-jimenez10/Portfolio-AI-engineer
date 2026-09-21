@@ -1,40 +1,47 @@
 @import "tailwindcss";
 
 /*
-  Intentionally dark-only design: this portfolio commits to a single "AI lab
-  at night" look rather than supporting a light theme. Background and text
-  colors are declared explicitly (never relying on the browser's default),
-  so the page always renders correctly regardless of OS theme.
+  Light, chat-first theme. The page is a conversation with Bongo, so the
+  surfaces are quiet and the color budget is spent on two things only:
+  blue for anything the visitor can act on, amber for Bongo himself.
 */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --bg-page: #05060a;
-  --bg-page-2: #0a0c14;
-  --surface-glass: rgba(255, 255, 255, 0.04);
-  --surface-glass-hover: rgba(255, 255, 255, 0.07);
-  --border-hairline: rgba(255, 255, 255, 0.09);
-  --border-hairline-strong: rgba(255, 255, 255, 0.16);
+  --bg-page: #faf8ff;
+  --surface-card: #ffffff;
+  --surface-1: #f2f3ff;
+  --surface-2: #eaedff;
+  --surface-3: #e2e7ff;
 
-  --ink-primary: #f3f4f8;
-  --ink-secondary: #a6a8b8;
-  --ink-muted: #6d6f80;
+  --border-hairline: #e3e6f5;
+  --border-hairline-strong: #c3c6d7;
 
-  --accent-violet: #8b5cf6;
-  --accent-cyan: #22d3ee;
-  --accent-gradient: linear-gradient(120deg, var(--accent-violet), var(--accent-cyan));
+  --ink-primary: #131b2e;
+  --ink-secondary: #434655;
+  --ink-muted: #737686;
 
-  /* Categorical (validated for CVD-safe adjacency in dark mode, see
-     src/lib/profile.ts skillCategoryMeta — always paired with a text label) */
-  --cat-ai: #3987e5;
-  --cat-backend: #d95926;
-  --cat-data: #199e70;
-  --cat-cloud: #c98500;
+  --accent-blue: #2563eb;
+  --accent-blue-deep: #004ac6;
+  --accent-blue-soft: #dbe1ff;
+  --accent-amber: #fea619;
+  --accent-amber-deep: #855300;
+  --accent-amber-soft: #ffddb8;
+
+  --status-online: #16a34a;
+
+  /* Categorical, re-tuned for a white background — the dark-theme values were
+     too light to clear 4.5:1 here. Always paired with a text label. */
+  --cat-ai: #1d4ed8;
+  --cat-backend: #c2410c;
+  --cat-data: #047857;
+  --cat-cloud: #a16207;
 
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+  --font-mono: var(--font-jetbrains-mono), var(--font-geist-mono), ui-monospace, monospace;
 
-  --shadow-glow: 0 0 0 1px var(--border-hairline), 0 20px 60px -20px rgba(139, 92, 246, 0.25);
+  --shadow-card: 0 1px 2px rgba(19, 27, 46, 0.04), 0 8px 24px -12px rgba(19, 27, 46, 0.12);
+  --shadow-raised: 0 2px 4px rgba(19, 27, 46, 0.05), 0 16px 40px -16px rgba(19, 27, 46, 0.18);
 }
 
 * {
@@ -46,83 +53,22 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 15% -10%, rgba(139, 92, 246, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 100% 10%, rgba(34, 211, 238, 0.10), transparent 55%),
-    var(--bg-page);
+  background: var(--bg-page);
   color: var(--ink-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
-  color: #fff;
+  background: var(--accent-blue-soft);
+  color: var(--accent-blue-deep);
 }
 
-/* Faint grid texture behind everything — an "AI lab" cue, not decoration for
-   its own sake. Fixed so it doesn't reflow with content height. */
-.bg-grid {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
-}
-
-/* Cursor-follow spotlight, driven by CSS vars set from JS (CursorSpotlight.tsx).
-   Cheap: a single fixed layer, no per-frame layout work. */
-.cursor-spotlight {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: radial-gradient(
-    480px circle at var(--spot-x, 50%) var(--spot-y, 30%),
-    rgba(139, 92, 246, 0.10),
-    transparent 70%
-  );
-  transition: opacity 0.4s ease;
-}
-
-.glass-card {
-  position: relative;
-  background: var(--surface-glass);
+.card {
+  background: var(--surface-card);
   border: 1px solid var(--border-hairline);
-  border-radius: 22px;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: var(--shadow-glow);
-  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
-}
-
-.glass-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.14), transparent 40%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-.glass-card:hover {
-  border-color: var(--border-hairline-strong);
-  background: var(--surface-glass-hover);
-}
-
-.text-gradient {
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
 }
 
 .font-mono-tight {
@@ -130,40 +76,159 @@ body {
   letter-spacing: -0.01em;
 }
 
-@keyframes orb-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.45), 0 0 40px 8px rgba(34, 211, 238, 0.18); }
-  50% { box-shadow: 0 0 0 10px rgba(139, 92, 246, 0), 0 0 55px 14px rgba(34, 211, 238, 0.28); }
+.label-caps {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.animate-orb-pulse {
-  animation: orb-pulse 3.2s ease-in-out infinite;
+/* ---- Bongo ---------------------------------------------------------- */
+
+/* Idle: a slow breath. Deliberately small — the avatar sits next to text
+   that people are reading, so motion here must never pull focus. */
+@keyframes bongo-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.012); }
 }
 
-@keyframes blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+.bongo-breathe {
+  animation: bongo-breathe 3.6s ease-in-out infinite;
 }
 
-.animate-blink {
-  animation: blink 1s step-start infinite;
+@keyframes bongo-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%, 97% { transform: scaleY(0.08); }
+}
+
+.bongo-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bongo-blink 5.2s ease-in-out infinite;
+}
+
+@keyframes bongo-tail {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(16deg); }
+}
+
+.bongo-tail {
+  transform-box: fill-box;
+  transform-origin: 8% 92%;
+  animation: bongo-tail 2.4s ease-in-out infinite;
+}
+
+/* Treat reward: the whole dog hops while the tail goes into overdrive. */
+.bongo-tail-fast {
+  animation-duration: 0.28s;
+}
+
+@keyframes bongo-hop {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  20% { transform: translateY(-16px) rotate(-5deg); }
+  45% { transform: translateY(0) rotate(0deg); }
+  62% { transform: translateY(-9px) rotate(4deg); }
+  80% { transform: translateY(0) rotate(0deg); }
+}
+
+.bongo-hop {
+  animation: bongo-hop 0.85s ease-in-out;
+}
+
+@keyframes bongo-tilt {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-7deg); }
+}
+
+.bongo-tilt {
+  transform-box: fill-box;
+  transform-origin: 50% 80%;
+  animation: bongo-tilt 1.5s ease-in-out infinite;
+}
+
+@keyframes bongo-ear {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-11deg); }
+}
+
+.bongo-ear-l {
+  transform-box: fill-box;
+  transform-origin: 78% 18%;
+  animation: bongo-ear 2.9s ease-in-out infinite;
+}
+
+.bongo-ear-r {
+  transform-box: fill-box;
+  transform-origin: 22% 18%;
+  animation: bongo-ear 2.9s ease-in-out infinite reverse;
+}
+
+@keyframes bark-pop {
+  0% { opacity: 0; transform: translate(-4px, 6px) scale(0.6); }
+  25% { opacity: 1; transform: translate(0, 0) scale(1.06); }
+  70% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(6px, -8px) scale(0.92); }
+}
+
+.bark-pop {
+  animation: bark-pop 0.95s ease-out forwards;
+}
+
+@keyframes treat-arc {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(0, -46px) scale(1.15) rotate(22deg); }
+}
+
+.treat-arc {
+  animation: treat-arc 0.9s ease-out forwards;
+}
+
+/* ---- Chat ------------------------------------------------------------ */
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.msg-in {
+  animation: msg-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.35; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+
+.dot-bounce {
+  animation: dot-bounce 1.2s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-orb-pulse,
-  .animate-blink {
+  .bongo-breathe,
+  .bongo-eye,
+  .bongo-tail,
+  .bongo-hop,
+  .bongo-tilt,
+  .bongo-ear-l,
+  .bongo-ear-r,
+  .bark-pop,
+  .treat-arc,
+  .msg-in,
+  .dot-bounce {
     animation: none;
   }
 }
 
-/* Thin scrollbar for the chat panel */
 .scroll-thin::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 .scroll-thin::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
+  background: var(--border-hairline-strong);
   border-radius: 999px;
 }
 .scroll-thin {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  scrollbar-color: var(--border-hairline-strong) transparent;
 }

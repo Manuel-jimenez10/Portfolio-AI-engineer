@@ -29,7 +29,7 @@ function renderInline(text: string, keyPrefix: string): ReactNode[] {
         return (
           <code
             key={key}
-            className="font-mono-tight text-[0.92em] px-1 py-0.5 rounded bg-white/10"
+            className="font-mono-tight text-[0.92em] px-1 py-0.5 rounded bg-[var(--surface-2)] text-[var(--accent-blue-deep)]"
           >
             {part.slice(1, -1)}
           </code>

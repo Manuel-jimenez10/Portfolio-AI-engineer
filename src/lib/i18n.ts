@@ -14,50 +14,62 @@ export interface JobT {
   stack: string[];
 }
 
+export type ModuleId = "about-bongo" | "agents" | "rag" | "metrics" | "experience";
+
+export interface BongoModule {
+  id: ModuleId;
+  title: string;
+  sub: string;
+  /** What gets shown as the visitor's message when the module is opened. */
+  ask: string;
+  /** Bongo's written answer. Rich blocks are appended after it by the renderer. */
+  body: string;
+}
+
 export interface Translation {
   meta: { title: string; description: string };
-  hero: {
-    available: string;
-    name: string;
-    role: string;
-    tagline: string;
-    ctaChat: string;
-    ctaLinkedin: string;
+  bongo: {
+    brand: string;
+    brandSub: string;
+    online: string;
+    navChat: string;
+    navStack: string;
+    navExperience: string;
+    navAbout: string;
+    contact: string;
+    greetingTitle: string;
+    greetingBody: string;
+    traits: string[];
+    suggestedLabel: string;
+    modulesLabel: string;
+    modulesCount: string;
+    modules: BongoModule[];
+    treatTitle: string;
+    treatSub: string;
+    treatButton: string;
+    treatCount: string;
+    barks: string[];
+    inputPlaceholder: string;
+    send: string;
+    disclaimer: string;
+    thinking: string;
+    profileNote: string;
+    sectionMetrics: string;
+    sectionStack: string;
+    sectionExperience: string;
+    sectionContact: string;
+    contactBlurb: string;
+    followUps: string;
   };
-  about: { label: string; summary: string; coreSkills: string[] };
-  status: {
-    label: string;
-    items: { label: string; state: string }[];
-  };
+  hero: { role: string };
   stack: {
-    label: string;
     categories: { ai: string; backend: string; data: string; cloud: string };
   };
   metrics: {
-    label: string;
     items: { value: string; label: string; context: string }[];
   };
-  experience: { label: string; jobs: JobT[] };
-  education: {
-    label: string;
-    items: { institution: string; degree: string; period: string }[];
-  };
-  certifications: { label: string; items: string[] };
-  contact: { label: string; blurb: string };
-  footer: { builtWith: string };
-  chat: {
-    orbOpenAria: string;
-    orbCloseAria: string;
-    assistantName: string;
-    assistantTagline: string;
-    welcome: string;
-    suggested: string[];
-    placeholder: string;
-    sendAria: string;
-    errorGeneric: string;
-    errorConnection: string;
-    backAria: string;
-  };
+  experience: { jobs: JobT[] };
+  chat: { errorGeneric: string; errorConnection: string };
 }
 
 export const translations: Record<Lang, Translation> = {
@@ -67,36 +79,82 @@ export const translations: Record<Lang, Translation> = {
       description:
         "AI Engineer y Senior Backend Developer especializado en workflows agénticos (LangGraph, CrewAI), RAG y automatización con APIs de Meta. Pregúntale a su asistente de IA sobre su trayectoria.",
     },
-    hero: {
-      available: "disponible para nuevos retos",
-      name: "Manuel Jiménez",
-      role: "AI Engineer & Senior Backend Developer",
-      tagline:
-        "Construyo sistemas de IA agéntica y backends de alta concurrencia que se sostienen en producción.",
-      ctaChat: "Habla con mi asistente de IA",
-      ctaLinkedin: "LinkedIn",
-    },
-    about: {
-      label: "Sobre mí",
-      summary:
-        "Desarrollador Backend certificado e Ingeniero en Informática, con experiencia en la creación de APIs REST y la integración de Inteligencia Artificial. He impulsado soluciones tecnológicas que integran IA y buenas prácticas de ingeniería backend, generando mejoras medibles en productividad, escalabilidad y experiencia de usuario.",
-      coreSkills: ["Backend Development", "Artificial Intelligence (AI)", "State Management"],
-    },
-    status: {
-      label: "Estado del sistema",
-      items: [
-        { label: "Meta Tech Provider", state: "Certificado" },
-        { label: "WhatsApp Cloud API × EspoCRM", state: "En producción" },
-        { label: "Multi-agente (LangGraph · CrewAI)", state: "Desplegado" },
-        { label: "Observabilidad LLM (Helicone)", state: "Activo" },
+    bongo: {
+      brand: "Bongo",
+      brandSub: "El asistente de Manuel",
+      online: "En línea",
+      navChat: "Conversar",
+      navStack: "Stack",
+      navExperience: "Trayectoria",
+      navAbout: "Sobre Manuel",
+      contact: "Contactar",
+      greetingTitle: "Hola, soy Bongo",
+      greetingBody:
+        "Acompaño a Manuel y conozco su trayectoria al detalle. Pregúntame por su stack, los sistemas multiagente que ha construido o cómo trabaja con RAG en producción.",
+      traits: ["Agentes y LangGraph", "RAG y Qdrant", "Backend de alta concurrencia"],
+      suggestedLabel: "Para empezar",
+      modulesLabel: "Explorar",
+      modulesCount: "5 temas",
+      modules: [
+        {
+          id: "about-bongo",
+          title: "Quién es Bongo",
+          sub: "Qué puedo responder y con qué datos",
+          ask: "¿Quién eres y qué puedes contarme?",
+          body: "Soy Bongo, el asistente de Manuel Jiménez. Respondo con la información de su CV y su LinkedIn: dónde ha trabajado, qué ha construido y con qué tecnologías. Si te interesa algo en concreto, pregúntame directo — y si no lo sé, te lo digo en lugar de inventarlo.",
+        },
+        {
+          id: "agents",
+          title: "Agentes y LangGraph",
+          sub: "Flujos multiagente en SellEasy",
+          ask: "Cuéntame sobre su trabajo con agentes y LangGraph",
+          body: "En SellEasy diseñó flujos de IA conversacional multiagente con LangGraph y CrewAI para ventas de e-commerce y atención al cliente de ciclo completo, resolviendo consultas de forma autónoma y bajando la latencia de respuesta un 32%. También construyó agentes autónomos de ads ops integrados con Meta Ads, TikTok Ads y Google Ads, que redujeron el tiempo de gestión de marketing un 23%.",
+        },
+        {
+          id: "rag",
+          title: "RAG y producción",
+          sub: "Qdrant, embeddings y observabilidad",
+          ask: "¿Cómo trabaja con RAG y bases vectoriales?",
+          body: "Diseñó sistemas de búsqueda semántica y recuperación con la base vectorial Qdrant y embeddings, optimizando el uso de tokens, el caching de prompts y el costo por inferencia. Para medirlo todo usa observabilidad de LLM con Helicone. En Seagloo además integró y evaluó pipelines con capas de validación de prompts, subiendo un 20% la precisión en clasificación de incidentes críticos.",
+        },
+        {
+          id: "metrics",
+          title: "Impacto medible",
+          sub: "Resultados verificables de su trabajo",
+          ask: "¿Qué resultados medibles ha conseguido?",
+          body: "Estos son los resultados que puede respaldar de su trabajo en Netcare IT, SellEasy y Seagloo:",
+        },
+        {
+          id: "experience",
+          title: "Trayectoria y contacto",
+          sub: "Dónde ha trabajado y cómo escribirle",
+          ask: "¿Dónde ha trabajado y cómo lo contacto?",
+          body: "Su recorrido de los últimos años, del rol más reciente al más antiguo:",
+        },
       ],
+      treatTitle: "Dale un premio a Bongo",
+      treatSub: "Se lo ha ganado respondiendo",
+      treatButton: "Dar premio",
+      treatCount: "premios",
+      barks: ["¡Guau!", "¡Guau guau!", "¡Auu!", "¡Guau! 🦴"],
+      inputPlaceholder: "Pregúntame sobre su stack, sus proyectos o su experiencia...",
+      send: "Enviar",
+      disclaimer: "Bongo responde con datos del CV y el LinkedIn de Manuel.",
+      thinking: "Bongo está pensando",
+      profileNote: "Conozco cada proyecto, stack y resultado de su trayectoria.",
+      sectionMetrics: "Impacto medible",
+      sectionStack: "Stack técnico",
+      sectionExperience: "Trayectoria",
+      sectionContact: "Hablar con Manuel",
+      contactBlurb:
+        "Está abierto a roles de AI Engineer y Backend Senior, y a conversar sobre sistemas agénticos en producción.",
+      followUps: "Seguir explorando",
     },
+    hero: { role: "AI Engineer & Senior Backend Developer" },
     stack: {
-      label: "Stack tecnológico",
       categories: { ai: "IA & Agentes", backend: "Backend", data: "Datos & Infra", cloud: "Cloud & DevOps" },
     },
     metrics: {
-      label: "Impacto medible",
       items: [
         { value: "−32%", label: "latencia de respuesta", context: "IA conversacional multiagente en SellEasy" },
         { value: "+22%", label: "ventas del equipo comercial", context: "mensajería omnicanal en Netcare IT" },
@@ -107,7 +165,6 @@ export const translations: Record<Lang, Translation> = {
       ],
     },
     experience: {
-      label: "Experiencia",
       jobs: [
         {
           company: "Netcare IT",
@@ -150,40 +207,9 @@ export const translations: Record<Lang, Translation> = {
         },
       ],
     },
-    education: {
-      label: "Educación",
-      items: [
-        { institution: "Universidad Privada Dr. Rafael Belloso Chacín", degree: "Ingeniería Informática", period: "En curso · esperado enero de 2025" },
-        { institution: "Henry (SoyHenry Academy)", degree: "Desarrollo Fullstack — formación intensiva", period: "Junio 2024 — Septiembre 2024" },
-      ],
-    },
-    certifications: {
-      label: "Certificaciones",
-      items: ["TypeScript — Verified by Talently", "Node.js — Verified by Talently", "React JS — Verified by Talently"],
-    },
-    contact: {
-      label: "Hablemos",
-      blurb: "Abierto a roles de AI Engineer y Backend Senior, o a conversar sobre sistemas agénticos y RAG en producción.",
-    },
-    footer: { builtWith: "Construido con Next.js + Gemini API" },
     chat: {
-      orbOpenAria: "Abrir asistente de IA",
-      orbCloseAria: "Cerrar chat",
-      assistantName: "Asistente de Manuel",
-      assistantTagline: "Aquí para atenderte y asesorarte sobre su trayectoria",
-      welcome:
-        "¡Hola! 👋 Soy el asistente de IA de Manuel. Estoy aquí para atenderte y contarte todo sobre su trayectoria, su stack técnico y sus proyectos.",
-      suggested: [
-        "¿En qué stack tiene más experiencia?",
-        "Cuéntame sobre SellEasy y los agentes de IA",
-        "¿Qué hizo en Netcare IT con WhatsApp?",
-        "¿Tiene experiencia con RAG y bases vectoriales?",
-      ],
-      placeholder: "Pregúntame algo sobre su carrera...",
-      sendAria: "Enviar mensaje",
-      errorGeneric: "Algo salió mal. Intenta de nuevo en un momento.",
-      errorConnection: "No pude conectar con el servidor. Revisa tu conexión e intenta de nuevo.",
-      backAria: "Volver al portafolio",
+      errorGeneric: "Something went wrong. Please try again in a moment.",
+      errorConnection: "Couldn't reach the server. Check your connection and try again.",
     },
   },
   en: {
@@ -192,35 +218,82 @@ export const translations: Record<Lang, Translation> = {
       description:
         "AI Engineer and Senior Backend Developer specializing in agentic workflows (LangGraph, CrewAI), RAG, and Meta API automation. Ask his AI assistant about his career.",
     },
-    hero: {
-      available: "open to new opportunities",
-      name: "Manuel Jiménez",
-      role: "AI Engineer & Senior Backend Developer",
-      tagline: "I build agentic AI systems and high-concurrency backends that hold up in production.",
-      ctaChat: "Talk to my AI assistant",
-      ctaLinkedin: "LinkedIn",
-    },
-    about: {
-      label: "About me",
-      summary:
-        "Certified Backend Developer and Computer Engineer with experience building REST APIs and integrating artificial intelligence. He has driven technology solutions that combine AI with solid backend engineering practices, delivering measurable gains in productivity, scalability, and user experience.",
-      coreSkills: ["Backend Development", "Artificial Intelligence (AI)", "State Management"],
-    },
-    status: {
-      label: "System status",
-      items: [
-        { label: "Meta Tech Provider", state: "Certified" },
-        { label: "WhatsApp Cloud API × EspoCRM", state: "In production" },
-        { label: "Multi-agent (LangGraph · CrewAI)", state: "Deployed" },
-        { label: "LLM Observability (Helicone)", state: "Active" },
+    bongo: {
+      brand: "Bongo",
+      brandSub: "Manuel's assistant",
+      online: "Online",
+      navChat: "Chat",
+      navStack: "Stack",
+      navExperience: "Experience",
+      navAbout: "About Manuel",
+      contact: "Get in touch",
+      greetingTitle: "Hi, I'm Bongo",
+      greetingBody:
+        "I keep Manuel company and I know his career in detail. Ask me about his stack, the multi-agent systems he has built, or how he runs RAG in production.",
+      traits: ["Agents & LangGraph", "RAG & Qdrant", "High-concurrency backends"],
+      suggestedLabel: "Start here",
+      modulesLabel: "Explore",
+      modulesCount: "5 topics",
+      modules: [
+        {
+          id: "about-bongo",
+          title: "Who Bongo is",
+          sub: "What I can answer, and from what data",
+          ask: "Who are you and what can you tell me?",
+          body: "I'm Bongo, Manuel Jiménez's assistant. I answer using what's in his CV and LinkedIn: where he has worked, what he has built and with which technologies. Ask me anything specific — and if I don't know something, I'll say so rather than make it up.",
+        },
+        {
+          id: "agents",
+          title: "Agents & LangGraph",
+          sub: "Multi-agent workflows at SellEasy",
+          ask: "Tell me about his work with agents and LangGraph",
+          body: "At SellEasy he designed multi-agent conversational AI workflows with LangGraph and CrewAI for full-cycle e-commerce sales and customer support, resolving inquiries autonomously and cutting response latency by 32%. He also built autonomous ad-ops agents integrated with Meta Ads, TikTok Ads and Google Ads, which cut marketing management time by 23%.",
+        },
+        {
+          id: "rag",
+          title: "RAG in production",
+          sub: "Qdrant, embeddings and observability",
+          ask: "How does he work with RAG and vector databases?",
+          body: "He designed semantic search and retrieval systems using the Qdrant vector database and embeddings, optimizing token usage, prompt caching and cost per inference. He measures it all with Helicone LLM observability. At Seagloo he also integrated and evaluated pipelines with prompt-validation layers, raising accuracy on critical incident classification by 20%.",
+        },
+        {
+          id: "metrics",
+          title: "Measurable impact",
+          sub: "Verifiable results from his work",
+          ask: "What measurable results has he delivered?",
+          body: "These are the results he can back up from his work at Netcare IT, SellEasy and Seagloo:",
+        },
+        {
+          id: "experience",
+          title: "Career & contact",
+          sub: "Where he has worked and how to reach him",
+          ask: "Where has he worked and how do I contact him?",
+          body: "His track record over the past few years, most recent role first:",
+        },
       ],
+      treatTitle: "Give Bongo a treat",
+      treatSub: "He earned it answering",
+      treatButton: "Give treat",
+      treatCount: "treats",
+      barks: ["Woof!", "Woof woof!", "Arf!", "Woof! 🦴"],
+      inputPlaceholder: "Ask me about his stack, his projects or his experience...",
+      send: "Send",
+      disclaimer: "Bongo answers using data from Manuel's CV and LinkedIn.",
+      thinking: "Bongo is thinking",
+      profileNote: "I know every project, stack and result in his career.",
+      sectionMetrics: "Measurable impact",
+      sectionStack: "Tech stack",
+      sectionExperience: "Experience",
+      sectionContact: "Talk to Manuel",
+      contactBlurb:
+        "He's open to AI Engineer and Senior Backend roles, and happy to talk about agentic systems in production.",
+      followUps: "Keep exploring",
     },
+    hero: { role: "AI Engineer & Senior Backend Developer" },
     stack: {
-      label: "Tech stack",
       categories: { ai: "AI & Agents", backend: "Backend", data: "Data & Infra", cloud: "Cloud & DevOps" },
     },
     metrics: {
-      label: "Measurable impact",
       items: [
         { value: "−32%", label: "response latency", context: "multi-agent conversational AI at SellEasy" },
         { value: "+22%", label: "sales team volume", context: "omnichannel messaging at Netcare IT" },
@@ -231,7 +304,6 @@ export const translations: Record<Lang, Translation> = {
       ],
     },
     experience: {
-      label: "Experience",
       jobs: [
         {
           company: "Netcare IT",
@@ -274,40 +346,9 @@ export const translations: Record<Lang, Translation> = {
         },
       ],
     },
-    education: {
-      label: "Education",
-      items: [
-        { institution: "Universidad Privada Dr. Rafael Belloso Chacín", degree: "Computer Engineering", period: "In progress · expected January 2025" },
-        { institution: "Henry (SoyHenry Academy)", degree: "Fullstack Development — intensive program", period: "June 2024 — September 2024" },
-      ],
-    },
-    certifications: {
-      label: "Certifications",
-      items: ["TypeScript — Verified by Talently", "Node.js — Verified by Talently", "React JS — Verified by Talently"],
-    },
-    contact: {
-      label: "Let's talk",
-      blurb: "Open to AI Engineer and Senior Backend roles, or just to talk about agentic systems and RAG in production.",
-    },
-    footer: { builtWith: "Built with Next.js + Gemini API" },
     chat: {
-      orbOpenAria: "Open AI assistant",
-      orbCloseAria: "Close chat",
-      assistantName: "Manuel's Assistant",
-      assistantTagline: "Here to help and advise you about his career",
-      welcome:
-        "Hi! 👋 I'm Manuel's AI assistant. I'm here to help you and tell you all about his career, tech stack, and projects.",
-      suggested: [
-        "What stack does he have the most experience with?",
-        "Tell me about SellEasy and the AI agents",
-        "What did he build at Netcare IT with WhatsApp?",
-        "Does he have experience with RAG and vector databases?",
-      ],
-      placeholder: "Ask me something about his career...",
-      sendAria: "Send message",
       errorGeneric: "Something went wrong. Please try again in a moment.",
       errorConnection: "Couldn't reach the server. Check your connection and try again.",
-      backAria: "Back to portfolio",
     },
   },
 };

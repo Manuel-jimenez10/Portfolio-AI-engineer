@@ -7,7 +7,7 @@ export default function LanguageToggle({ className = "" }: { className?: string 
 
   return (
     <div
-      className={`inline-flex items-center rounded-full border border-[var(--border-hairline-strong)] p-0.5 text-xs font-mono-tight ${className}`}
+      className={`inline-flex items-center rounded-full border border-[var(--border-hairline)] bg-[var(--surface-card)] p-0.5 text-xs ${className}`}
       role="group"
       aria-label="Language"
     >
@@ -16,10 +16,10 @@ export default function LanguageToggle({ className = "" }: { className?: string 
           key={l}
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
-          className="px-2.5 py-1 rounded-full transition-colors"
+          className="rounded-full px-2.5 py-1 transition-colors"
           style={{
-            background: lang === l ? "var(--accent-gradient)" : "transparent",
-            color: lang === l ? "#05060a" : "var(--ink-secondary)",
+            background: lang === l ? "var(--accent-blue)" : "transparent",
+            color: lang === l ? "#fff" : "var(--ink-secondary)",
             fontWeight: lang === l ? 600 : 500,
           }}
         >

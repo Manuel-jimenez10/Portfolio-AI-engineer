@@ -1,53 +1,42 @@
 "use client";
 
-import { useRef } from "react";
-import CursorSpotlight from "@/components/CursorSpotlight";
-import Hero from "@/components/Hero";
-import AboutCard from "@/components/AboutCard";
-import StatusCard from "@/components/StatusCard";
-import StackConstellation from "@/components/StackConstellation";
-import MetricsRow from "@/components/MetricsRow";
-import ExperienceTimeline from "@/components/ExperienceTimeline";
-import { EducationCard, CertificationsCard, ContactCard } from "@/components/InfoCards";
+import { useRef, useState } from "react";
+import BongoTopNav from "@/components/BongoTopNav";
+import BongoSidebar from "@/components/BongoSidebar";
+import BongoChat, { type BongoChatHandle } from "@/components/BongoChat";
 import Footer from "@/components/Footer";
-import AIChatWidget, { type AIChatWidgetHandle } from "@/components/AIChatWidget";
 import { LanguageProvider } from "@/lib/LanguageContext";
+import type { ModuleId } from "@/lib/i18n";
 
 export default function Home() {
-  const chatRef = useRef<AIChatWidgetHandle>(null);
+  const chatRef = useRef<BongoChatHandle>(null);
+  const [treats, setTreats] = useState(0);
+
+  const pickModule = (id: ModuleId) => chatRef.current?.openModule(id);
 
   return (
     <LanguageProvider>
-      <div className="relative min-h-screen">
-        <div className="bg-grid" />
-        <CursorSpotlight />
+      <div className="flex min-h-screen flex-col">
+        <BongoTopNav onPickModule={pickModule} />
 
-        <main className="relative z-10 mx-auto max-w-5xl px-5 sm:px-6">
-          <Hero onOpenChat={() => chatRef.current?.open()} />
-
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-            <AboutCard />
-            <StatusCard />
-          </section>
-
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mt-4 sm:mt-5">
-            <StackConstellation />
-          </section>
-
-          <MetricsRow />
-
-          <ExperienceTimeline />
-
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 mt-6">
-            <EducationCard />
-            <CertificationsCard />
-            <ContactCard />
-          </section>
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-5 sm:px-6">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
+            {/* Chat leads on narrow screens — stacking the sidebar first would
+                bury the one thing this page is for. */}
+            <div className="order-2 lg:order-1">
+              <BongoSidebar
+                treats={treats}
+                onTreat={() => setTreats((n) => n + 1)}
+                onPickModule={pickModule}
+              />
+            </div>
+            <div className="order-1 h-[min(78vh,820px)] min-h-[560px] lg:order-2">
+              <BongoChat ref={chatRef} barkNonce={treats} />
+            </div>
+          </div>
 
           <Footer />
         </main>
-
-        <AIChatWidget ref={chatRef} />
       </div>
     </LanguageProvider>
   );
